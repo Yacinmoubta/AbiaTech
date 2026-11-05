@@ -2,13 +2,13 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { StoreService } from '../core/store.service';
 import { Client, totalReparation } from '../core/models';
-import { DatePipeFr, IconComponent, ModalComponent, MoneyPipe, couleurStatut, filtreTexte } from '../shared/ui';
+import { DatePipeFr, IconComponent, ModalComponent, MoneyPipe, couleurStatut, filtreTexte, TableCartesDirective } from '../shared/ui';
 
 const vide = (): Client => ({ id: '', nom: '', telephone: '', email: '', adresse: '', cin: '', notes: '', creeLe: '' });
 
 @Component({
   selector: 'app-clients',
-  imports: [FormsModule, IconComponent, ModalComponent, MoneyPipe, DatePipeFr],
+  imports: [TableCartesDirective, FormsModule, IconComponent, ModalComponent, MoneyPipe, DatePipeFr],
   template: `
     <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
       <div>
@@ -26,7 +26,7 @@ const vide = (): Client => ({ id: '', nom: '', telephone: '', email: '', adresse
         </div>
       </div>
       <div class="overflow-x-auto">
-        <table class="table">
+        <table class="table" appCartes>
           <thead><tr><th>Client</th><th>Téléphone</th><th class="text-center">Achats</th><th class="text-center">Réparations</th><th class="text-right">Total dépensé</th><th></th></tr></thead>
           <tbody>
             @for (c of liste(); track c.c.id) {

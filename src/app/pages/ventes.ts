@@ -3,14 +3,14 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StoreService } from '../core/store.service';
 import { LigneVente, MODES_PAIEMENT, ModePaiement, Produit, Vente } from '../core/models';
-import { DatePipeFr, IconComponent, ModalComponent, MoneyPipe, filtreTexte } from '../shared/ui';
+import { DatePipeFr, IconComponent, ModalComponent, MoneyPipe, filtreTexte, TableCartesDirective } from '../shared/ui';
 import { ClientSelectComponent } from '../shared/client-select';
 import { MobileService } from '../core/mobile.service';
 import { DocEnteteComponent, DocPiedComponent } from '../shared/doc';
 
 @Component({
   selector: 'app-ventes',
-  imports: [FormsModule, IconComponent, ModalComponent, MoneyPipe, DatePipeFr, ClientSelectComponent, DocEnteteComponent, DocPiedComponent],
+  imports: [TableCartesDirective, FormsModule, IconComponent, ModalComponent, MoneyPipe, DatePipeFr, ClientSelectComponent, DocEnteteComponent, DocPiedComponent],
   template: `
     <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
       <div>
@@ -30,7 +30,7 @@ import { DocEnteteComponent, DocPiedComponent } from '../shared/doc';
         <input type="date" class="input w-auto" [ngModel]="au()" (ngModelChange)="au.set($event)" title="Au" />
       </div>
       <div class="overflow-x-auto">
-        <table class="table">
+        <table class="table" appCartes>
           <thead><tr><th>N°</th><th>Date</th><th>Client</th><th>Articles</th><th>Paiement</th><th class="text-right">Total</th><th></th></tr></thead>
           <tbody>
             @for (v of liste(); track v.id) {

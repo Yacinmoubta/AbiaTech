@@ -8,34 +8,80 @@
   --color-brand-500: #2f6fed;
   --color-brand-600: #1f57d6;
   --color-brand-700: #1a45ad;
+  --color-ink-900: #111c3d;
+  --color-ink-950: #0b1228;
 }
 
 @layer base {
-  body { @apply bg-slate-50 text-slate-800 antialiased; }
+  body { @apply bg-[#f4f6fb] text-slate-800 antialiased; }
 }
 
 @utility btn {
-  @apply inline-flex items-center justify-center gap-2 rounded-lg px-3.5 py-2 text-sm font-medium transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer;
+  @apply inline-flex items-center justify-center gap-2 rounded-lg px-3.5 py-2 text-sm font-medium transition active:scale-[.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500;
 }
 
 @layer components {
-  .card { @apply bg-white rounded-xl border border-slate-200 shadow-sm; }
-  .btn-primary { @apply btn bg-brand-600 text-white hover:bg-brand-700; }
-  .btn-secondary { @apply btn bg-white text-slate-700 border border-slate-300 hover:bg-slate-50; }
+  .card { @apply min-w-0 bg-white rounded-2xl border border-slate-200/70 shadow-[0_1px_2px_rgb(15_23_42/.04),0_8px_24px_-12px_rgb(15_23_42/.1)]; }
+  .btn-primary { @apply btn bg-brand-600 text-white shadow-sm shadow-brand-600/30 hover:bg-brand-700; }
+  .btn-secondary { @apply btn bg-white text-slate-700 border border-slate-200 shadow-xs hover:border-slate-300 hover:bg-slate-50; }
   .btn-danger { @apply btn bg-red-50 text-red-700 hover:bg-red-100; }
   .btn-ghost { @apply btn text-slate-600 hover:bg-slate-100 px-2.5; }
-  .input { @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100; }
+  .input { @apply w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-base sm:text-sm outline-none transition hover:border-slate-300 focus:border-brand-500 focus:ring-3 focus:ring-brand-100; }
   .label { @apply block text-xs font-medium text-slate-600 mb-1; }
   .table { @apply w-full text-sm; }
-  .table th { @apply text-left font-medium text-slate-500 text-xs uppercase tracking-wide px-4 py-3 bg-slate-50 border-b border-slate-200; }
+  .table th { @apply text-left font-semibold text-slate-500 text-[11px] uppercase tracking-wider px-4 py-3 bg-slate-50/70 border-b border-slate-100; }
   .table td { @apply px-4 py-3 border-b border-slate-100 align-middle; }
-  .table tbody tr:hover { @apply bg-slate-50/70; }
+  .table tbody tr { @apply transition-colors; }
+  .table tbody tr:hover { @apply bg-brand-50/40; }
+  .table tbody tr:last-child td { @apply border-b-0; }
   .badge { @apply inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium; }
-  .page-title { @apply text-2xl font-semibold text-slate-900; }
+  .page-title { @apply text-2xl sm:text-3xl font-bold tracking-tight text-slate-900; }
+}
+
+/* Téléphone : chaque ligne d'un tableau de liste devient une fiche lisible sans défilement horizontal */
+@media (max-width: 639.98px) {
+  .table-cartes, .table-cartes tbody { display: block; }
+  .table-cartes thead { display: none; }
+  .table-cartes tbody tr {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .75rem 1rem;
+    padding: 1rem;
+    border-bottom: 1px solid var(--color-slate-100);
+  }
+  .table-cartes tbody tr:last-child { border-bottom: 0; }
+  .table-cartes td { display: block; min-width: 0; max-width: none; padding: 0; border: 0; text-align: left; white-space: normal; overflow-wrap: anywhere; }
+  .table-cartes td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: .125rem;
+    color: var(--color-slate-500);
+    font-size: .6875rem;
+    font-weight: 500;
+  }
+  .table-cartes td[data-label=""]::before, .table-cartes td:not([data-label])::before { content: none; }
+  .table-cartes td:first-child, .table-cartes td:last-child, .table-cartes td.carte-titre { grid-column: 1 / -1; }
+  .table-cartes td:first-child::before, .table-cartes td.carte-titre::before { content: none; }
+  .table-cartes td:first-child, .table-cartes td.carte-titre { font-size: .9375rem; }
+  .table-cartes td:last-child:not([colspan]) { margin: -.25rem -.5rem -.5rem; text-align: right; }
+  .table-cartes td[colspan] { text-align: center; }
+  .table-cartes td.carte-coin { position: absolute; top: 1rem; right: 1rem; width: auto; }
+  .table-cartes td.carte-titre { padding-right: 2.25rem; }
+}
+
+@keyframes apparition { from { opacity: 0; } }
+@keyframes montee { from { opacity: 0; transform: translateY(.75rem); } }
+main > :not(router-outlet) { display: block; animation: apparition .2s ease-out; }
+.modal-fond { animation: apparition .15s ease-out; }
+.modal-boite { animation: montee .2s ease-out; }
+@media (prefers-reduced-motion: reduce) {
+  main > :not(router-outlet), .modal-fond, .modal-boite { animation: none; }
 }
 
 @media print {
   .no-print { display: none !important; }
+  .modal-fond { backdrop-filter: none; }
   body { background: white; }
   body.printing * { visibility: hidden; }
   body.printing .print-area, body.printing .print-area * { visibility: visible; }

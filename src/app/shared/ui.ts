@@ -1,4 +1,4 @@
-import { Component, Pipe, PipeTransform, effect, inject, input, output } from '@angular/core';
+import { Component, Directive, ElementRef, Pipe, PipeTransform, afterEveryRender, effect, inject, input, output } from '@angular/core';
 import { MobileService } from '../core/mobile.service';
 import { StoreService } from '../core/store.service';
 import { StatutReparation } from '../core/models';
@@ -62,13 +62,27 @@ export class IconComponent {
   d = () => ICONES[this.name()] ?? '';
 }
 
+/** Sur téléphone, affiche les lignes du tableau en fiches : recopie le titre de chaque colonne sur ses cellules */
+@Directive({ selector: 'table[appCartes]', host: { class: 'table-cartes' } })
+export class TableCartesDirective {
+  constructor() {
+    const table = inject<ElementRef<HTMLTableElement>>(ElementRef).nativeElement;
+    afterEveryRender(() => {
+      const titres = Array.from(table.tHead?.rows[0]?.cells ?? [], c => c.textContent?.trim() ?? '');
+      for (const ligne of Array.from(table.tBodies[0]?.rows ?? [])) {
+        Array.from(ligne.cells).forEach((td, i) => { if (td.colSpan === 1) td.dataset['label'] = titres[i] ?? ''; });
+      }
+    });
+  }
+}
+
 @Component({
   selector: 'app-modal',
   imports: [IconComponent],
   template: `
     @if (open()) {
-      <div class="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-slate-900/40 p-4 sm:p-8 no-print-backdrop" (click)="close.emit()">
-        <div class="card w-full my-auto" [class]="width()" (click)="$event.stopPropagation()">
+      <div class="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-slate-900/50 p-3 backdrop-blur-sm sm:p-8 no-print-backdrop modal-fond" (click)="close.emit()">
+        <div class="card modal-boite w-full my-auto" [class]="width()" (click)="$event.stopPropagation()">
           <div class="flex items-center justify-between border-b border-slate-200 px-5 py-4 no-print">
             <h2 class="text-lg font-semibold">{{ title() }}</h2>
             <button class="btn-ghost" (click)="close.emit()" aria-label="Fermer"><app-icon name="x" /></button>

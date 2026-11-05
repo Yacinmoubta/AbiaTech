@@ -2,7 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { StoreService } from '../core/store.service';
 import { ProduitAAcheter } from '../core/models';
-import { IconComponent, ModalComponent, MoneyPipe, filtreTexte } from '../shared/ui';
+import { IconComponent, ModalComponent, MoneyPipe, filtreTexte, TableCartesDirective } from '../shared/ui';
 
 const vide = (): ProduitAAcheter => ({
   id: '', nom: '', quantite: 1, produitId: '', fournisseurId: '', prixEstime: 0, notes: '', statut: 'À acheter', creeLe: '',
@@ -10,14 +10,14 @@ const vide = (): ProduitAAcheter => ({
 
 @Component({
   selector: 'app-a-acheter',
-  imports: [FormsModule, IconComponent, ModalComponent, MoneyPipe],
+  imports: [TableCartesDirective, FormsModule, IconComponent, ModalComponent, MoneyPipe],
   template: `
     <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
       <div>
         <h1 class="page-title">À acheter</h1>
         <p class="text-sm text-slate-500 mt-1">{{ store.resteAAcheter().length }} produit(s) à acheter · {{ totalEstime() | money }} estimés</p>
       </div>
-      <div class="flex gap-2">
+      <div class="flex flex-wrap gap-2">
         @if (nbAchetes() > 0) {
           <button class="btn-secondary" (click)="retirerAchetes()"><app-icon name="trash" [size]="16" /> Retirer les achetés</button>
         }
@@ -36,16 +36,16 @@ const vide = (): ProduitAAcheter => ({
         </select>
       </div>
       <div class="overflow-x-auto">
-        <table class="table">
+        <table class="table" appCartes>
           <thead><tr><th class="w-10"></th><th>Produit</th><th class="text-center">Qté</th><th>Fournisseur</th><th class="text-right">Prix estimé</th><th class="text-right">Total</th><th></th></tr></thead>
           <tbody>
             @for (a of liste(); track a.id) {
               <tr [class.text-slate-400]="a.statut === 'Acheté'">
-                <td>
+                <td class="carte-coin">
                   <input type="checkbox" class="h-5 w-5 align-middle" [checked]="a.statut === 'Acheté'"
                          (change)="store.basculerAAcheter(a.id)" [attr.aria-label]="'Marquer ' + a.nom + ' comme acheté'" />
                 </td>
-                <td>
+                <td class="carte-titre">
                   <div class="font-medium" [class.line-through]="a.statut === 'Acheté'">{{ a.nom }}</div>
                   @if (a.notes) { <div class="text-xs text-slate-500">{{ a.notes }}</div> }
                 </td>

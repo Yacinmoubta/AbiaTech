@@ -2,14 +2,14 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { StoreService } from '../core/store.service';
 import { Achat, CATEGORIES, Categorie, ETATS, Etat, LigneAchat, MODES_PAIEMENT, ModePaiement, TypeAchat } from '../core/models';
-import { DatePipeFr, IconComponent, ModalComponent, MoneyPipe, filtreTexte } from '../shared/ui';
+import { DatePipeFr, IconComponent, ModalComponent, MoneyPipe, filtreTexte, TableCartesDirective } from '../shared/ui';
 import { ClientSelectComponent } from '../shared/client-select';
 import { MobileService } from '../core/mobile.service';
 import { DocEnteteComponent, DocPiedComponent } from '../shared/doc';
 
 @Component({
   selector: 'app-achats',
-  imports: [FormsModule, IconComponent, ModalComponent, MoneyPipe, DatePipeFr, ClientSelectComponent, DocEnteteComponent, DocPiedComponent],
+  imports: [TableCartesDirective, FormsModule, IconComponent, ModalComponent, MoneyPipe, DatePipeFr, ClientSelectComponent, DocEnteteComponent, DocPiedComponent],
   template: `
     <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
       <div>
@@ -33,7 +33,7 @@ import { DocEnteteComponent, DocPiedComponent } from '../shared/doc';
         </select>
       </div>
       <div class="overflow-x-auto">
-        <table class="table">
+        <table class="table" appCartes>
           <thead><tr><th>N°</th><th>Date</th><th>Type</th><th>Fournisseur / Vendeur</th><th>Articles</th><th class="text-right">Total</th><th></th></tr></thead>
           <tbody>
             @for (a of liste(); track a.id) {

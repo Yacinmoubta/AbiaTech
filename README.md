@@ -1,4 +1,4 @@
-# Gestion Magasin — Téléphones, Ordinateurs & Électronique
+# AbiaTech — Téléphones, Ordinateurs & Électronique
 
 Application Angular 22 + Tailwind CSS 4 pour gérer un magasin de **vente**, **achat/rachat** et **réparation** d'appareils.
 

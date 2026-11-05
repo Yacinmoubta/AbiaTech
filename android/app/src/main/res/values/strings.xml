@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Gestion Magasin</string>
-    <string name="title_activity_main">Gestion Magasin</string>
+    <string name="app_name">AbiaTech</string>
+    <string name="title_activity_main">AbiaTech</string>
     <string name="package_name">ma.magasin.gestion</string>
     <string name="custom_url_scheme">ma.magasin.gestion</string>
 </resources>

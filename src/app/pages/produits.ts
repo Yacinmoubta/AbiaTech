@@ -2,7 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { StoreService } from '../core/store.service';
 import { CATEGORIES, ETATS, Produit } from '../core/models';
-import { IconComponent, ModalComponent, MoneyPipe, filtreTexte } from '../shared/ui';
+import { IconComponent, ModalComponent, MoneyPipe, filtreTexte, TableCartesDirective } from '../shared/ui';
 
 const vide = (): Produit => ({
   id: '', reference: '', nom: '', categorie: 'Téléphone', marque: '', etat: 'Neuf', numeroSerie: '',
@@ -11,7 +11,7 @@ const vide = (): Produit => ({
 
 @Component({
   selector: 'app-produits',
-  imports: [FormsModule, IconComponent, ModalComponent, MoneyPipe],
+  imports: [TableCartesDirective, FormsModule, IconComponent, ModalComponent, MoneyPipe],
   template: `
     <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
       <div>
@@ -36,7 +36,7 @@ const vide = (): Produit => ({
         </label>
       </div>
       <div class="overflow-x-auto">
-        <table class="table">
+        <table class="table" appCartes>
           <thead><tr><th>Produit</th><th>Catégorie</th><th>État</th><th class="text-right">Prix achat</th><th class="text-right">Prix vente</th><th class="text-center">Stock</th><th></th></tr></thead>
           <tbody>
             @for (p of liste(); track p.id) {

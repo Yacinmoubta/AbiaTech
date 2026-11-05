@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StoreService } from '../core/store.service';
 import { CATEGORIES, PieceUtilisee, Reparation, STATUTS_REPARATION, StatutReparation, totalReparation } from '../core/models';
-import { DatePipeFr, IconComponent, ModalComponent, MoneyPipe, couleurStatut, filtreTexte } from '../shared/ui';
+import { DatePipeFr, IconComponent, ModalComponent, MoneyPipe, couleurStatut, filtreTexte, TableCartesDirective } from '../shared/ui';
 import { ClientSelectComponent } from '../shared/client-select';
 import { MobileService } from '../core/mobile.service';
 import { DocEnteteComponent, DocPiedComponent } from '../shared/doc';
@@ -16,7 +16,7 @@ const vide = (): Reparation => ({
 
 @Component({
   selector: 'app-reparations',
-  imports: [FormsModule, IconComponent, ModalComponent, MoneyPipe, DatePipeFr, ClientSelectComponent, DocEnteteComponent, DocPiedComponent],
+  imports: [TableCartesDirective, FormsModule, IconComponent, ModalComponent, MoneyPipe, DatePipeFr, ClientSelectComponent, DocEnteteComponent, DocPiedComponent],
   template: `
     <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
       <div>
@@ -71,7 +71,7 @@ const vide = (): Reparation => ({
       </div>
     } @else {
       <div class="card overflow-x-auto">
-        <table class="table">
+        <table class="table" appCartes>
           <thead><tr><th>N°</th><th>Dépôt</th><th>Client</th><th>Appareil</th><th>Panne</th><th>Statut</th><th class="text-right">Total</th><th class="text-right">Reste</th><th></th></tr></thead>
           <tbody>
             @for (r of filtrees(); track r.id) {
