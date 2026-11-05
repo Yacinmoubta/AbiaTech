@@ -1,0 +1,45 @@
+# Compile l'application Android (APK) sur les serveurs de GitHub, sans Android Studio.
+# Onglet "Actions" → "Build APK Android" → "Run workflow", puis télécharger l'artefact.
+name: Build APK Android
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Installer les dépendances
+        run: npm ci
+
+      - name: Construire l'application web
+        run: npx ng build
+
+      - name: Synchroniser avec Android
+        run: npx cap sync android
+
+      - name: Compiler l'APK
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - name: Publier l'APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: gestion-magasin-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
