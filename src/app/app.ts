@@ -29,9 +29,6 @@ import { IconComponent } from './shared/ui';
                 <span class="badge bg-white/15 text-white">{{ reparationsActives() }}</span>
               }
               @if (l.path === '/a-acheter' && store.resteAAcheter().length > 0) {
-                <span class="badge bg-brand-600 text-white">{{ store.resteAAcheter().length }}</span>
-              }
-              @if (l.path === '/a-acheter' && store.resteAAcheter().length > 0) {
                 <span class="badge bg-white/15 text-white">{{ store.resteAAcheter().length }}</span>
               }
               @if (l.path === '/produits' && store.stockFaible().length > 0) {
