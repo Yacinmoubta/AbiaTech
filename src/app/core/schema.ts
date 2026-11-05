@@ -66,6 +66,12 @@ CREATE TABLE IF NOT EXISTS reparation_pieces (
   produitId TEXT, designation TEXT, quantite INTEGER, prixUnitaire REAL,
   PRIMARY KEY (reparationId, ordre)
 );
+
+CREATE TABLE IF NOT EXISTS a_acheter (
+  id TEXT PRIMARY KEY NOT NULL,
+  nom TEXT NOT NULL, quantite INTEGER DEFAULT 1, produitId TEXT, fournisseurId TEXT,
+  prixEstime REAL DEFAULT 0, notes TEXT, statut TEXT, creeLe TEXT
+);
 `;
 
 export interface DefTable {
@@ -74,7 +80,7 @@ export interface DefTable {
   enfants?: { table: string; fk: string; champ: string; colonnes: string[] };
 }
 
-export type NomCollection = 'produits' | 'clients' | 'fournisseurs' | 'ventes' | 'achats' | 'reparations';
+export type NomCollection = 'produits' | 'clients' | 'fournisseurs' | 'ventes' | 'achats' | 'reparations' | 'aAcheter';
 
 export const TABLES: Record<NomCollection, DefTable> = {
   produits: {
@@ -99,6 +105,7 @@ export const TABLES: Record<NomCollection, DefTable> = {
       'codeDeverrouillage', 'accessoires', 'panne', 'diagnostic', 'technicien', 'statut', 'mainOeuvre', 'devis', 'acompte', 'garantieJours', 'notes'],
     enfants: { table: 'reparation_pieces', fk: 'reparationId', champ: 'pieces', colonnes: ['produitId', 'designation', 'quantite', 'prixUnitaire'] },
   },
+  aAcheter: { table: 'a_acheter', colonnes: ['id', 'nom', 'quantite', 'produitId', 'fournisseurId', 'prixEstime', 'notes', 'statut', 'creeLe'] },
 };
 
 export const COLLECTIONS = Object.keys(TABLES) as NomCollection[];

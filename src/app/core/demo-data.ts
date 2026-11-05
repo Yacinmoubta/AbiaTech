@@ -65,7 +65,7 @@ export function creerDonneesDemo(): Donnees {
   ];
 
   return {
-    produits, clients, fournisseurs, ventes, achats, reparations,
+    produits, clients, fournisseurs, ventes, achats, reparations, aAcheter: [],
     parametres: {
       nomMagasin: 'AbiaTech',
       adresse: '12 Bd Zerktouni, Casablanca',

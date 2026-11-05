@@ -121,6 +121,21 @@ export interface Reparation {
   notes?: string;
 }
 
+export type StatutAAcheter = 'À acheter' | 'Acheté';
+
+/** Produit noté sur la liste d'achats : n'a aucun effet sur le stock */
+export interface ProduitAAcheter {
+  id: string;
+  nom: string;
+  quantite: number;
+  produitId?: string;
+  fournisseurId?: string;
+  prixEstime?: number;
+  notes?: string;
+  statut: StatutAAcheter;
+  creeLe: string;
+}
+
 export interface Parametres {
   nomMagasin: string;
   adresse: string;
@@ -139,6 +154,7 @@ export interface Donnees {
   ventes: Vente[];
   achats: Achat[];
   reparations: Reparation[];
+  aAcheter: ProduitAAcheter[];
   parametres: Parametres;
 }
 

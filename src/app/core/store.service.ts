@@ -1,6 +1,6 @@
 import { Injectable, computed, effect, inject, signal } from '@angular/core';
 import {
-  Achat, Client, Donnees, Fournisseur, Parametres, PieceUtilisee, Produit, Reparation, StatutReparation, Vente,
+  Achat, Client, Donnees, Fournisseur, Parametres, PieceUtilisee, Produit, ProduitAAcheter, Reparation, StatutReparation, Vente,
 } from './models';
 import { creerDonneesDemo } from './demo-data';
 import { PersistanceService } from './persistance.service';
@@ -16,9 +16,11 @@ export class StoreService {
   readonly ventes = signal<Vente[]>([]);
   readonly achats = signal<Achat[]>([]);
   readonly reparations = signal<Reparation[]>([]);
+  readonly aAcheter = signal<ProduitAAcheter[]>([]);
   readonly parametres = signal<Parametres>(creerDonneesDemo().parametres);
 
   readonly stockFaible = computed(() => this.produits().filter(p => p.stock <= p.seuilAlerte));
+  readonly resteAAcheter = computed(() => this.aAcheter().filter(a => a.statut === 'À acheter'));
   readonly valeurStock = computed(() => this.produits().reduce((s, p) => s + p.stock * p.prixAchat, 0));
 
   private persistance = inject(PersistanceService);
@@ -64,20 +66,21 @@ export class StoreService {
     this.ventes.set(d.ventes ?? []);
     this.achats.set(d.achats ?? []);
     this.reparations.set(d.reparations ?? []);
+    this.aAcheter.set(d.aAcheter ?? []);
     this.parametres.set({ ...creerDonneesDemo().parametres, ...(d.parametres ?? {}) });
   }
 
   exporter(): Donnees {
     return {
       produits: this.produits(), clients: this.clients(), fournisseurs: this.fournisseurs(),
-      ventes: this.ventes(), achats: this.achats(), reparations: this.reparations(), parametres: this.parametres(),
+      ventes: this.ventes(), achats: this.achats(), reparations: this.reparations(), aAcheter: this.aAcheter(), parametres: this.parametres(),
     };
   }
 
   reinitialiserDemo() { this.appliquer(creerDonneesDemo()); }
   toutEffacer() {
     const p = this.parametres();
-    this.appliquer({ produits: [], clients: [], fournisseurs: [], ventes: [], achats: [], reparations: [], parametres: p });
+    this.appliquer({ produits: [], clients: [], fournisseurs: [], ventes: [], achats: [], reparations: [], aAcheter: [], parametres: p });
   }
 
   // ---------- Recherche ----------
@@ -167,6 +170,24 @@ export class StoreService {
     a.lignes.forEach(l => this.ajusterStock(l.produitId, -l.quantite));
     this.achats.update(as => as.filter(x => x.id !== id));
   }
+
+  // ---------- Liste des produits à acheter ----------
+  enregistrerAAcheter(a: ProduitAAcheter) {
+    if (!a.id) {
+      a = { ...a, id: uid(), creeLe: new Date().toISOString() };
+      this.aAcheter.update(as => [a, ...as]);
+    } else {
+      this.aAcheter.update(as => as.map(x => x.id === a.id ? a : x));
+    }
+    return a;
+  }
+  basculerAAcheter(id: string) {
+    this.aAcheter.update(as => as.map(a => a.id === id
+      ? { ...a, statut: a.statut === 'Acheté' ? 'À acheter' as const : 'Acheté' as const }
+      : a));
+  }
+  supprimerAAcheter(id: string) { this.aAcheter.update(as => as.filter(a => a.id !== id)); }
+  retirerAAcheterAchetes() { this.aAcheter.update(as => as.filter(a => a.statut !== 'Acheté')); }
 
   // ---------- Réparations ----------
   enregistrerReparation(r: Reparation) {

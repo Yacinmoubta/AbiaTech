@@ -47,6 +47,7 @@ const ICONES: Record<string, string> = {
   upload: 'M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12',
   check: 'M20 6L9 17l-5-5',
   minus: 'M5 12h14',
+  list: 'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01',
 };
 
 @Component({

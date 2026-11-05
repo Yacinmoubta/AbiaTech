@@ -28,6 +28,9 @@ import { IconComponent } from './shared/ui';
               @if (l.path === '/reparations' && reparationsActives() > 0) {
                 <span class="badge bg-brand-600 text-white">{{ reparationsActives() }}</span>
               }
+              @if (l.path === '/a-acheter' && store.resteAAcheter().length > 0) {
+                <span class="badge bg-brand-600 text-white">{{ store.resteAAcheter().length }}</span>
+              }
               @if (l.path === '/produits' && store.stockFaible().length > 0) {
                 <span class="badge bg-amber-500 text-white">{{ store.stockFaible().length }}</span>
               }
@@ -63,6 +66,7 @@ export class App {
     { path: '/reparations', label: 'Réparations', icon: 'wrench' },
     { path: '/produits', label: 'Produits & stock', icon: 'box' },
     { path: '/achats', label: 'Achats', icon: 'truck' },
+    { path: '/a-acheter', label: 'À acheter', icon: 'list' },
     { path: '/clients', label: 'Clients', icon: 'users' },
     { path: '/fournisseurs', label: 'Fournisseurs', icon: 'factory' },
     { path: '/parametres', label: 'Paramètres', icon: 'settings' },
